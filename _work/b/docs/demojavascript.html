@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="shortcut icon" href="favicon.ico" />
+
+<title>PlantUML</title>
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
+<meta name="description"
+	content="PlantUML is an open-source tool written in Java that uses simple textual descriptions to draw UML diagrams. Can be integrated with Word." />
+<link rel="stylesheet" media="screen" type="text/css" title="Design"
+	href="css/design2.css" />
+<link rel="alternate" type="application/rss+xml"
+	href="http://plantuml.sourceforge.net/rss.xml"
+	title="RSS Feeds about latest PlantUML modifications" />
+
+</head>
+<body>
+
+<div id="en_tete">
+<h1>PlantUML</h1>
+<p>Open-Source tool in Java to draw UML Diagram</p>
+</div>
+
+<div id="menu">
+<div align="center">
+
+<h1><a href="index.html">Home</a></h1>
+</div>
+
+
+</div>
+
+
+<p>
+
+<h1>Javascript Client</h1>
+
+There are two versions of the Javascript client:
+<ul>
+<li><a href=demojavascript2.html>A synchronous version</a> (simplier),</li>
+<li>An asynchronous version <b>[This is the version of this page]</b> (which is using a WebWorker, more complex).
+</ul>
+<p>
+
+<h2>Working asynchronous demonstration</h2>
+
+
+<!--  taken from https://github.com/johan/js-deflate -->
+<script src="../lib/rawdeflate.js"></script>
+<script>
+$ = function(id){ return document.getElementById(id) };
+
+function encode64(data) {
+ r = "";
+ for (i=0; i<data.length; i+=3) {
+  if (i+2==data.length) {
+   r +=append3bytes(data.charCodeAt(i), data.charCodeAt(i+1), 0);
+  } else if (i+1==data.length) {
+   r += append3bytes(data.charCodeAt(i), 0, 0);
+  } else {
+   r += append3bytes(data.charCodeAt(i), data.charCodeAt(i+1), data.charCodeAt(i+2));
+  }
+}
+return r;
+}
+
+function append3bytes(b1, b2, b3) {
+c1 = b1 >> 2;
+c2 = ((b1 & 0x3) << 4) | (b2 >> 4);
+c3 = ((b2 & 0xF) << 2) | (b3 >> 6);
+c4 = b3 & 0x3F;
+r = "";
+r += encode6bit(c1 & 0x3F);
+r += encode6bit(c2 & 0x3F);
+r += encode6bit(c3 & 0x3F);
+r += encode6bit(c4 & 0x3F);
+return r;
+}
+
+function encode6bit(b) {
+if (b < 10) {
+ return String.fromCharCode(48 + b);
+}
+b -= 10;
+if (b < 26) {
+ return String.fromCharCode(65 + b);
+}
+b -= 26;
+if (b < 26) {
+ return String.fromCharCode(97 + b);
+}
+b -= 26;
+if (b == 0) {
+ return '-';
+}
+if (b == 1) {
+ return '_';
+}
+return '?';
+}
+
+var deflater = window.SharedWorker && new SharedWorker('rawdeflate.js');
+if (deflater) {
+  deflater.port.addEventListener('message', done_deflating, false);
+  deflater.port.start();
+} else if (window.Worker) {
+  deflater = new Worker('rawdeflate.js');
+  deflater.onmessage = done_deflating;
+}
+
+function done_deflating(e) {
+  $('im').src = "http://www.plantuml.com/plantuml/img/"+encode64(e.data);
+}
+
+function compress(s) {
+  //UTF8
+  s = unescape(encodeURIComponent(s));
+
+  if (deflater) {
+    if (deflater.port && deflater.port.postMessage) {
+      deflater.port.postMessage(s);
+    } else {
+      deflater.postMessage(s);
+    }
+  } else {
+    setTimeout(function() {
+      done_deflating({ data: deflate(s) });
+    }, 100);
+  }
+}
+</script>
+
+<table>
+<tr>
+<td>
+<form>
+<textarea id="inflated" cols="64" rows="10">Bob->Alice : hello</textarea>
+<p>
+<input type=submit onclick="compress($('inflated').value);return false;">
+<p>
+<img id="im" src=http://www.plantuml.com/plantuml/img/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000>
+</form>
+</td>
+<td valign=top>
+You will find <a href=codejavascript.html>here the Javascript source of this page</a>.
+<p>There is also a <a href=demophp.php>working demo</a> in PHP.
+</td>
+</tr>
+</table>
+
+<p>
+</div>
+
+</body>
+</html>
+<!-- volt:signature cHM405ZuTjRTNrkB7ijZbW00 -->

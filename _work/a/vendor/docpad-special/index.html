@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]>      <html class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>colony</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=400, initial-scale=1">
+
+        <link href='./css/normalize.css' rel='stylesheet' type='text/css'>
+        <link href='./css/colony.css' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,600,300italic|Source+Code+Pro:400' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="main" role="main">
+                <div id="colony"></div>
+                <div id="readme">
+                    <div id="readme-contents">
+                        <h1>browserify</h1>
+<p>Make node-style require() work in the browser with a server-side build step,
+as if by magic!
+
+</p>
+<p><a href="http://travis-ci.org/substack/node-browserify"><img src="https://secure.travis-ci.org/substack/node-browserify.png" alt="build status"></a>
+
+</p>
+<p><img src="http://substack.net/images/browserify/browserify.png" alt="browserify!">
+
+</p>
+<h1>example</h1>
+<p>Just write an <code>entry.js</code> to start with some <code>require()</code>s in it:
+
+</p>
+<p>````javascript
+// use relative requires
+var foo = require(&#39;./foo&#39;);
+var bar = require(&#39;../lib/bar&#39;);
+
+</p>
+<p>// or use modules installed by npm into node_modules/
+var gamma = require(&#39;gamma&#39;);
+
+</p>
+<p>var elem = document.getElementById(&#39;result&#39;);
+var x = foo(100) + bar(&#39;baz&#39;);
+elem.textContent = gamma(x);
+````
+
+</p>
+<p>Now just use the <code>browserify</code> command to build a bundle starting at <code>entry.js</code>:
+
+</p>
+<pre><code>$ browserify entry.js -o bundle.js</code></pre>
+<p>All of the modules that <code>entry.js</code> needs are included in the final bundle from a
+recursive walk using <a href="https://github.com/substack/node-detective">detective</a>.
+
+</p>
+<p>To use the bundle, just toss a <code>&lt;script src=&quot;bundle.js&quot;&gt;&lt;/script&gt;</code> into your
+html!
+
+</p>
+<h1>usage</h1>
+<p>````
+Usage: browserify [entry files] {OPTIONS}
+
+</p>
+<p>Options:
+  --outfile, -o  Write the browserify bundle to this file.
+                 If unspecified, browserify prints to stdout.<br>  --require, -r  A module name or file to bundle.require()
+                 Optionally use a colon separator to set the target.<br>  --entry, -e    An entry point of your app<br>  --exports      Export these core objects, comma-separated list
+                 with any of: require, process. If unspecified, the
+                 export behavior will be inferred.
+
+</p>
+<p>  --ignore, -i   Ignore a file<br>  --alias, -a    Register an alias with a colon separator: &quot;to:from&quot;
+                 Example: --alias &#39;jquery:jquery-browserify&#39;<br>  --cache, -c    Turn on caching at $HOME/.config/browserling/cache.json or use
+                 a file for caching.
+                                                                 [default: true]
+  --debug, -d    Switch on debugging mode with //@ sourceURL=...s.     [boolean]
+  --plugin, -p   Use a plugin.
+                 Example: --plugin aliasify<br>  --prelude      Include the code that defines require() in this bundle.
+                                                      [boolean]  [default: true]
+  --watch, -w    Watch for changes. The script will stay open and write updates
+                 to the output every time any of the bundled files change.
+                 This option only works in tandem with -o.<br>  --verbose, -v  Write out how many bytes were written in -o mode. This is
+                 especially useful with --watch.<br>  --help, -h     Show this message                                              
+
+</p>
+<p>````
+
+</p>
+<h1>compatibility</h1>
+<p>Many <a href="http://npmjs.org">npm</a> modules that don&#39;t do IO will just work after being
+browserified. Others take more work.
+
+</p>
+<p><a href="http://coffeescript.org/">coffee script</a> should pretty much just work.
+Just do <code>browserify entry.coffee</code> or <code>require(&#39;./foo.coffee&#39;)</code>.
+
+</p>
+<p>Many node built-in modules have been wrapped to work in the browser.
+All you need to do is <code>require()</code> them like in node.
+
+</p>
+<ul>
+<li>events</li>
+<li>path</li>
+<li><a href="https://github.com/substack/vm-browserify">vm</a></li>
+<li><a href="https://github.com/substack/http-browserify">http</a></li>
+<li><a href="https://github.com/dominictarr/crypto-browserify">crypto</a></li>
+<li>assert</li>
+<li>url</li>
+<li>buffer</li>
+<li>buffer_ieee754</li>
+<li>util</li>
+<li>querystring</li>
+<li>stream</li>
+</ul>
+<h2>process</h2>
+<p>Browserify makes available a faux <code>process</code> object to modules with these
+attributes:
+
+</p>
+<ul>
+<li>nextTick(fn) - uses <a href="http://dbaron.org/log/20100309-faster-timeouts">the postMessage trick</a>
+  for a faster <code>setTimeout(fn, 0)</code> if it can</li>
+<li>title - set to &#39;browser&#39; for browser code, &#39;node&#39; in regular node code</li>
+<li>browser - <code>true</code>, good for testing if you&#39;re in a browser or in node</li>
+</ul>
+<p>By default the process object is only available inside of files wrapped by
+browserify. To expose it, use <code>--exports=process</code>
+
+</p>
+<h2>__dirname</h2>
+<p>The faux directory name, scrubbed of true directory information so as not to
+expose your filesystem organization.
+
+</p>
+<h2>__filename</h2>
+<p>The faux file path, scrubbed of true path information so as not to expose your
+filesystem organization.
+
+</p>
+<h1>package.json</h1>
+<p>In order to resolve main files for projects, the package.json &quot;main&quot; field is
+read.
+
+</p>
+<p>If a package.json has a &quot;browserify&quot; field, you can override the standard &quot;main&quot;
+behavior with something special just for browsers.
+
+</p>
+<p>See <a href="https://github.com/substack/dnode/blob/9e24b97cf2ce931fbf6d7beb3731086b46bca887/package.json#L40">dnode&#39;s
+package.json</a>
+for an example of using the &quot;browserify&quot; field.
+
+</p>
+<h1>more</h1>
+<ul>
+<li><a href="https://github.com/substack/node-browserify/blob/master/doc/recipes.markdown#recipes">browserify recipes</a></li>
+<li><a href="https://github.com/substack/node-browserify/blob/master/doc/methods.markdown#methods">browserify api reference</a></li>
+<li><a href="http://browserify.nodejitsu.com/">browserify cdn</a></li>
+</ul>
+<h1>install</h1>
+<p>With <a href="http://npmjs.org">npm</a> do:
+
+</p>
+<pre><code>npm install -g browserify</code></pre>
+<h1>test</h1>
+<p>To run the node tests with tap, do:
+
+</p>
+<pre><code>npm test</code></pre>
+<p>To run the <a href="http://testling.com">testling</a> tests,
+create a <a href="http://browserling.com">browserling</a> account then:
+
+</p>
+<pre><code>cd testling
+./test.sh</code></pre>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+<!-- File Data and Javascript -->
+<script type="text/javascript">
+window.colony = {"nodes":[{"id":"index.js","module":false,"mgroup":false,"filename":"0/index.js","root":true,"index":0},{"id":"query-engine.js","module":false,"mgroup":false,"filename":"1/query-engine.js","root":true,"index":1},{"id":"main.js","module":false,"mgroup":false,"filename":"2/main.js","root":true,"index":2},{"id":"backbone.js","module":false,"mgroup":false,"filename":"3/backbone.js","root":true,"index":3},{"id":"coffee-script","filename":"0/node_modules/coffee-script/lib/coffee-script/coffee-script.js","module":true,"native":false,"mgroup":"coffee-script","index":4},{"id":"wrap.js","filename":"0/lib/wrap.js","module":false,"native":false,"mgroup":false,"index":5},{"id":"watch.js","filename":"0/lib/watch.js","module":false,"native":false,"mgroup":false,"index":6},{"id":"underscore","filename":"3/node_modules/underscore/underscore.js","module":true,"native":false,"mgroup":"underscore","index":7},{"id":"lexer.js","filename":"0/node_modules/coffee-script/lib/coffee-script/lexer.js","module":false,"native":false,"mgroup":"coffee-script","index":8},{"id":"parser.js","filename":"0/node_modules/coffee-script/lib/coffee-script/parser.js","module":false,"native":false,"mgroup":"coffee-script","index":9},{"id":"helpers.js","filename":"0/node_modules/coffee-script/lib/coffee-script/helpers.js","module":false,"native":false,"mgroup":"coffee-script","index":10},{"id":"nodes.js","filename":"0/node_modules/coffee-script/lib/coffee-script/nodes.js","module":false,"native":false,"mgroup":"coffee-script","index":11},{"id":"detective","filename":"0/node_modules/detective/index.js","module":true,"native":false,"mgroup":"detective","index":12},{"id":"deputy","filename":"0/node_modules/deputy/index.js","module":true,"native":false,"mgroup":"deputy","index":13},{"id":"resolve","filename":"0/node_modules/resolve/index.js","module":true,"native":false,"mgroup":"resolve","index":14},{"id":"wrappers.js","filename":"0/lib/wrappers.js","module":false,"native":false,"mgroup":false,"index":15},{"id":"commondir","filename":"0/node_modules/commondir/index.js","module":true,"native":false,"mgroup":"commondir","index":16},{"id":"nub","filename":"0/node_modules/nub/index.js","module":true,"native":false,"mgroup":"nub","index":17},{"id":"syntax-error","filename":"0/node_modules/syntax-error/index.js","module":true,"native":false,"mgroup":"syntax-error","index":18},{"id":"rewriter.js","filename":"0/node_modules/coffee-script/lib/coffee-script/rewriter.js","module":false,"native":false,"mgroup":"coffee-script","index":19},{"id":"scope.js","filename":"0/node_modules/coffee-script/lib/coffee-script/scope.js","module":false,"native":false,"mgroup":"coffee-script","index":20},{"id":"esprima","filename":"0/node_modules/detective/node_modules/esprima/esprima.js","module":true,"native":false,"mgroup":"esprima","index":21},{"id":"mkdirp","filename":"0/node_modules/deputy/node_modules/mkdirp/index.js","module":true,"native":false,"mgroup":"mkdirp","index":22},{"id":"esprima","filename":"0/node_modules/syntax-error/node_modules/esprima/esprima.js","module":true,"native":false,"mgroup":"esprima","index":23}],"links":[{"source":1,"target":3},{"source":0,"target":4},{"source":0,"target":5},{"source":0,"target":6},{"source":3,"target":7},{"source":4,"target":8},{"source":11,"target":8},{"source":4,"target":9},{"source":4,"target":10},{"source":8,"target":10},{"source":11,"target":10},{"source":20,"target":10},{"source":4,"target":11},{"source":5,"target":12},{"source":13,"target":12},{"source":5,"target":13},{"source":5,"target":14},{"source":5,"target":15},{"source":5,"target":16},{"source":5,"target":17},{"source":5,"target":18},{"source":8,"target":19},{"source":11,"target":20},{"source":12,"target":21},{"source":13,"target":22},{"source":18,"target":23}],"scale":1};
+</script>
+<script type="text/javascript" src="./js/colony.min.js"></script>
+
+    </body>
+</html>

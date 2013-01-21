@@ -1,0 +1,77 @@
+<h1>watch.js</h1>
+<pre><code class="lang-js"><span class="keyword">var</span> fs = require(<span class="string">'fs'</span>);
+<span class="keyword">var</span> path = require(<span class="string">'path'</span>);
+<span class="keyword">var</span> exists = fs.exists || path.exists;
+
+module.exports = <span class="function"><span class="keyword">function</span> <span class="params">(w, opts)</span> {</span> 
+    <span class="keyword">if</span> (!w.watches) w.watches = [];
+    w.register(reg.bind(<span class="literal">null</span>, w, opts));
+};
+
+<span class="function"><span class="keyword">function</span> <span class="title">reg</span> <span class="params">(w, opts, body, file)</span> {</span>
+    <span class="comment">// if already being watched</span>
+    <span class="keyword">if</span> (w.watches[file]) <span class="keyword">return</span> body;
+    
+    <span class="keyword">var</span> type = w.files[file] ? <span class="string">'files'</span> : <span class="string">'entries'</span>;
+    
+    <span class="keyword">var</span> watch = <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+        <span class="keyword">if</span> (w.files[file] &amp;&amp; w.files[file].synthetic) <span class="keyword">return</span>;
+        
+        <span class="keyword">if</span> (<span class="keyword">typeof</span> opts === <span class="string">'object'</span>) {
+            w.watches[file] = fs.watch(file, opts, watcher);
+        }
+        <span class="keyword">else</span> {
+            w.watches[file] = fs.watch(file, watcher);
+        }
+    };
+    <span class="keyword">var</span> pending = <span class="literal">null</span>;
+    <span class="keyword">var</span> bundle = <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+        <span class="keyword">if</span> (pending) <span class="keyword">return</span>;
+        pending = setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+            pending = <span class="literal">null</span>;
+            <span class="comment">// modified</span>
+            <span class="keyword">if</span> (w[type][file]) {
+                w.reload(file);
+            }
+            <span class="keyword">else</span> <span class="keyword">if</span> (type === <span class="string">'entries'</span>) {
+                w.addEntry(file);
+            }
+            <span class="keyword">else</span> <span class="keyword">if</span> (type === <span class="string">'files'</span>) {
+                w.require(file);
+            }
+            
+            w._cache = <span class="literal">null</span>;
+            w.emit(<span class="string">'bundle'</span>);
+        }, <span class="number">100</span>);
+    };
+    
+    <span class="keyword">var</span> watcher = <span class="function"><span class="keyword">function</span> <span class="params">(event, filename)</span> {</span>
+        exists(file, <span class="function"><span class="keyword">function</span> <span class="params">(ex)</span> {</span>
+            <span class="keyword">if</span> (!ex) {
+                <span class="comment">// deleted</span>
+                <span class="keyword">if</span> (w.files[file]) {
+                    <span class="keyword">delete</span> w.files[file];
+                }
+                <span class="keyword">else</span> <span class="keyword">if</span> (w.entries[file] !== <span class="literal">undefined</span>) {
+                    w.appends.splice(w.entries[file], <span class="number">1</span>);
+                }
+                
+                w._cache = <span class="literal">null</span>;
+            }
+            <span class="keyword">else</span> <span class="keyword">if</span> (event === <span class="string">'change'</span>) {
+                bundle();
+            }
+            <span class="keyword">else</span> <span class="keyword">if</span> (event === <span class="string">'rename'</span>) {
+                w.watches[file].close();
+                process.nextTick(watch);
+                bundle();
+            }
+        });
+    };
+    
+    w.watches[file] = <span class="literal">true</span>;
+    process.nextTick(watch);
+    
+    <span class="keyword">return</span> body;
+}
+</code></pre>

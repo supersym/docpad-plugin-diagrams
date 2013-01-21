@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="shortcut icon" href="favicon.ico" />
+
+<title>PlantUML</title>
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
+<meta name="description"
+	content="PlantUML is an open-source tool written in Java that uses simple textual descriptions to draw UML diagrams. Can be integrated with Word." />
+<link rel="stylesheet" media="screen" type="text/css" title="Design"
+	href="css/design2.css" />
+<link rel="alternate" type="application/rss+xml"
+	href="http://plantuml.sourceforge.net/rss.xml"
+	title="RSS Feeds about latest PlantUML modifications" />
+
+</head>
+<body>
+<!-- Debut de la div de l'en_tete -->
+<div id="en_tete">
+<h1>PlantUML</h1>
+<p>Open-Source tool in Java to draw UML Diagram</p>
+</div>
+<!-- Fin de la div de l'en_tete -->
+
+<!-- Debut de la div du Menu -->
+<div id="menu">
+<div align="center">
+<!--mydonate-->
+<h1><a href="index.html">Home</a></h1>
+</div>
+<!--debutul-->
+<ul>
+<li><a href="screenshot.html">Screenshots</a></li>
+<li><a href="download.html">Download</a></li>
+<li><a href="news.html">What's New ?</a></li>
+<li><a href="faq.html">F.A.Q.</a></li>
+<li><a href="running.html">Running</a></li>
+<li><a href="/qa">Question & Answer<img border=0 src=icon_new.png></a></li>
+<li><a href="sitemap.html">Site Map</a></li>
+<li><a href="sequence.html">Sequence Diagram</a></li>
+<li><a href="usecase.html">Use Case Diagram</a></li>
+<li><a href="classes.html">Class Diagram</a></li>
+<li><a href="activity.html">Activity Diagram</a></li>
+<li><a href="component.html">Component Diagram</a></li>
+<li><a href="state.html">State Diagram</a></li>
+<li><a href="objects.html">Object Diagram</a></li>
+<li><a href="http://sourceforge.net/apps/phpbb/plantuml/viewforum.php?f=1">Forum</a></li>
+<li><a href="external_links.html">External Links</a></li>
+<li><a href="jdot/jdot.html">JDot</a></li>
+</ul>
+<center>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-5770515425712095";
+/* Skyscraper1 */
+google_ad_slot = "3366868652";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</center>
+</div>
+<!-- fin de la div du Menu -->
+
+
+<div id="corps"><!--ps1--><p align=center><a href="http://www.sukaza.com/easy"><img border=0 src=http://www.sukaza.com/ico1.png></img></a>&nbsp;&nbsp;<i>Have a break with <a href="http://www.sukaza.com/easy">Sukaza</a></i>&nbsp;&nbsp;<a href="http://www.sukaza.com/easy"><img border=0 src=http://www.sukaza.com/ico1.png></img></a><!--ps2-->
+<p align=center>
+<a href=translate_fr.html><img border=0 src=flags/fr.png></a>
+<a href=translate_de.html><img border=0 src=flags/de.png></a>
+<a href=translate_ru.html><img border=0 src=flags/ru.png></a>
+<a href=translate_ja.html><img border=0 src=flags/ja.png></a>
+<a href=translate_kr.html><img border=0 src=flags/kr.png></a>
+<a href=translate_es.html><img border=0 src=flags/es.png></a>
+<a href=translate_zh.html><img border=0 src=flags/zh.png></a>
+<a href=translate_uk.html><img border=0 src=flags/uk.png></a>
+<a href=translate_it.html><img border=0 src=flags/it.png></a>
+<p>
+<center>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-5770515425712095";
+/* Leaderboard1 */
+google_ad_slot = "4649490822";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</center>
+<p>
+
+<h1>Javascript Client</h1>
+
+There are two versions of the Javascript client:
+<ul>
+<li>A synchronous version <b>[This is the version of this page]</b> (simplier),</li>
+<li><a href=demojavascript.html>An asynchronous version</a> (which is using a WebWorker, more complex).
+</ul>
+<p>
+
+<h2>Working synchronous demonstration</h2>
+
+
+<script src="deflate.js"></script>
+<script>
+$ = function(id){ return document.getElementById(id) };
+
+function encode64(data) {
+ r = "";
+ for (i=0; i<data.length; i+=3) {
+  if (i+2==data.length) {
+   r +=append3bytes(data.charCodeAt(i), data.charCodeAt(i+1), 0);
+  } else if (i+1==data.length) {
+   r += append3bytes(data.charCodeAt(i), 0, 0);
+  } else {
+   r += append3bytes(data.charCodeAt(i), data.charCodeAt(i+1), data.charCodeAt(i+2));
+  }
+}
+return r;
+}
+
+function append3bytes(b1, b2, b3) {
+c1 = b1 >> 2;
+c2 = ((b1 & 0x3) << 4) | (b2 >> 4);
+c3 = ((b2 & 0xF) << 2) | (b3 >> 6);
+c4 = b3 & 0x3F;
+r = "";
+r += encode6bit(c1 & 0x3F);
+r += encode6bit(c2 & 0x3F);
+r += encode6bit(c3 & 0x3F);
+r += encode6bit(c4 & 0x3F);
+return r;
+}
+
+function encode6bit(b) {
+if (b < 10) {
+ return String.fromCharCode(48 + b);
+}
+b -= 10;
+if (b < 26) {
+ return String.fromCharCode(65 + b);
+}
+b -= 26;
+if (b < 26) {
+ return String.fromCharCode(97 + b);
+}
+b -= 26;
+if (b == 0) {
+ return '-';
+}
+if (b == 1) {
+ return '_';
+}
+return '?';
+}
+
+function compress(s) {
+  //UTF8
+  s = unescape(encodeURIComponent(s));
+  $('im').src = "http://www.plantuml.com/plantuml/img/"+encode64(zip_deflate(s, 9));
+}
+</script>
+
+<table>
+<tr>
+<td>
+<form>
+<textarea id="inflated" cols="64" rows="10">Bob->Alice : hello</textarea>
+<p>
+<input type=submit onclick="compress($('inflated').value);return false;">
+<p>
+<img id="im" src=http://www.plantuml.com/plantuml/img/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000>
+</form>
+</td>
+<td valign=top>
+You will find <a href=codejavascript2.html>here the Javascript source of this page</a>.
+<p>There is also a <a href=demophp.php>working demo</a> in PHP.
+</td>
+</tr>
+</table>
+
+<p>
+<center>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-5770515425712095";
+/* Leaderboard1 */
+google_ad_slot = "4649490822";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</center>
+</div>
+
+<!-- Debut de la div du pied de page --><div id="pied_de_page"><table width=100% border=0><tr align=center><td width=16%><a title="Your help is really appreciate" href="http://sourceforge.net/donate/index.php?group_id=259736"><img src="http://sourceforge.net/images/x-click-but7.gif"	border="0" alt="Support This Project" /></a></td><td width=16% title="Feedback appreciate"><a href=mailto:plantuml@gmail.com><img border=0 src="mail.gif" /></a></td><td width=16%><a href="dropbox.html" title="Offer 250 Mo!"><img border=0 src="dropbox.png" alt="Offer 250 Mo!" title="Offer 250 Mo!" /></a></td><td width=16%><a href="http://www.twitter.com/PlantUML" title="Follow PlantUML on Twitter"><img border=0 src="http://twitter-badges.s3.amazonaws.com/t_small-c.png" alt="Follow PlantUML on Twitter" title="Follow PlantUML on Twitter" /></a></td><td width=16%><a title="Use Google Reader" href="http://www.google.com/reader/view/feed/http%3A%2F%2Fplantuml.sourceforge.net%2Frss.xml"><img border=0 src="google_reader.png" alt="PlantUML on Google Reader" title="PlantUML on Google Reader" /></a></td><td width=16%><!-- Start of StatCounter Code --><script 	type="text/javascript"> var sc_project=5903985; var sc_invisible=0; var sc_security="118f86d0"; </script><script type="text/javascript"	src="http://www.statcounter.com/counter/counter.js"></script> <!-- End of StatCounter Code --></td></tr></table></div><!-- Fin de la div du pied de page -->
+</body>
+</html>
+<!-- volt:signature _qaIR0jdlqweCPrVuLfjl000 -->

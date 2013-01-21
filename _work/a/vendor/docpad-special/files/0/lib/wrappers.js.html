@@ -1,0 +1,12 @@
+<h1>wrappers.js</h1>
+<pre><code class="lang-js"><span class="keyword">var</span> fs = require(<span class="string">'fs'</span>);
+
+module.exports = fs.readdirSync(__dirname + <span class="string">'/../wrappers'</span>)
+    .filter(<span class="function"><span class="keyword">function</span> <span class="params">(file)</span> {</span> <span class="keyword">return</span> file.match(<span class="regexp">/\.js$/</span>) })
+    .reduce(<span class="function"><span class="keyword">function</span> <span class="params">(acc, file)</span> {</span>
+        <span class="keyword">var</span> name = file.replace(<span class="regexp">/\.js$/</span>, <span class="string">''</span>);
+        acc[name] = fs.readFileSync(__dirname + <span class="string">'/../wrappers/'</span> + file, <span class="string">'utf8'</span>);
+        <span class="keyword">return</span> acc;
+    }, {})
+;
+</code></pre>

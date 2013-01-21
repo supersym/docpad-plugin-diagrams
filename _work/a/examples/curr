@@ -1,0 +1,16 @@
+@startuml
+participant "Docpad User" as usr
+participant "The <b>Famous </b> Bob" as Bob
+usr -> Bob : A <i>well formated </i> message
+note right of usr
+This is <size:18>displayed </size>
+<u>left of</u> usr.
+end note
+note left of Bob
+This is <color:#118888>displayed </color>
+<b><color:purple>left of</color> <strike>usr </strike> Bob</b>.
+end note
+note over usr, Bob
+This is hosted by <img:sourceforge.jpg>
+end note
+@enduml
